@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Ha Pagato? 💸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --p1: #FF6B6B;
+      --p2: #C77DFF;
+      --bg: #FFF8F0;
+      --accent: #FFD93D;
+      --dark: #1e1e2e;
+      --muted: #999;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 16px 60px;
+      background-image:
+        radial-gradient(ellipse at 15% 10%, rgba(255,107,107,0.15) 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 90%, rgba(199,125,255,0.15) 0%, transparent 45%);
+    }
+
+    .header { text-align: center; margin-bottom: 30px; }
+    .header h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.9rem, 6vw, 2.8rem);
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .header p { color: var(--muted); font-weight: 700; font-size: 0.95rem; }
+
+    /* NAMES */
+    .names-row { display: flex; gap: 14px; width: 100%; max-width: 480px; margin-bottom: 28px; }
+
+    .name-block { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .name-block label { font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; padding-left: 4px; }
+    .name-block:first-child label { color: var(--p1); }
+    .name-block:last-child  label { color: var(--p2); }
+    .name-block input {
+      border: 2.5px solid #e8e8e8; border-radius: 16px; padding: 11px 16px;
+      font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 800;
+      color: var(--dark); background: white; outline: none;
+      transition: border-color .2s, box-shadow .2s; width: 100%;
+    }
+    .name-block:first-child input:focus { border-color: var(--p1); box-shadow: 0 0 0 4px rgba(255,107,107,0.12); }
+    .name-block:last-child  input:focus { border-color: var(--p2); box-shadow: 0 0 0 4px rgba(199,125,255,0.12); }
+
+    /* CARDS */
+    .cards-row { display: flex; gap: 16px; width: 100%; max-width: 480px; margin-bottom: 28px; }
+    .counter-card {
+      flex: 1; background: white; border-radius: 28px; padding: 26px 18px 22px;
+      text-align: center; box-shadow: 0 6px 28px rgba(0,0,0,0.08);
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      transition: transform .15s;
+    }
+    .counter-card:hover { transform: translateY(-3px); }
+    .card-avatar { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+    .card1 .card-avatar { background: rgba(255,107,107,0.12); }
+    .card2 .card-avatar { background: rgba(199,125,255,0.12); }
+    .card-name { font-weight: 900; font-size: 1.05rem; color: var(--dark); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .card-count { font-family: 'Pacifico', cursive; font-size: 3rem; line-height: 1; }
+    .card1 .card-count { color: var(--p1); }
+    .card2 .card-count { color: var(--p2); }
+    .card-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+    .card-add-btn {
+      width: 100%; padding: 12px; border: none; border-radius: 16px;
+      font-family: 'Nunito', sans-serif; font-size: 0.92rem; font-weight: 900;
+      cursor: pointer; transition: transform .12s, box-shadow .12s; letter-spacing: .3px;
+    }
+    .card1 .card-add-btn { background: linear-gradient(135deg, #FF6B6B, #FF9A9A); color: white; box-shadow: 0 4px 16px rgba(255,107,107,0.35); }
+    .card2 .card-add-btn { background: linear-gradient(135deg, #C77DFF, #E0AAFF); color: white; box-shadow: 0 4px 16px rgba(199,125,255,0.35); }
+    .card-add-btn:hover  { transform: scale(1.04); }
+    .card-add-btn:active { transform: scale(0.96); }
+
+    /* BALANCE */
+    .balance-wrap {
+      width: 100%; max-width: 480px; background: white; border-radius: 22px;
+      padding: 20px 22px; box-shadow: 0 6px 28px rgba(0,0,0,0.07); margin-bottom: 28px;
+    }
+    .section-label { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 12px; }
+    .bar-track { height: 18px; background: #f0f0f0; border-radius: 30px; overflow: hidden; display: flex; margin-bottom: 10px; }
+    .bar-p1 { background: linear-gradient(90deg, #FF6B6B, #FF9A9A); height: 100%; transition: width .5s cubic-bezier(.34,1.56,.64,1); }
+    .bar-p2 { background: linear-gradient(90deg, #C77DFF, #E0AAFF); height: 100%; flex: 1; }
+    .balance-labels { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 800; }
+    .balance-labels span:first-child { color: var(--p1); }
+    .balance-labels span:last-child  { color: var(--p2); }
+    .balance-msg { text-align: center; font-size: 0.9rem; font-weight: 700; color: #666; margin-top: 12px; padding: 10px 16px; background: #fafafa; border-radius: 12px; }
+
+    /* LOG */
+    .log-section {
+      width: 100%; max-width: 480px; background: white; border-radius: 22px;
+      padding: 20px 20px; box-shadow: 0 6px 28px rgba(0,0,0,0.07); margin-bottom: 24px;
+    }
+    .add-form { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+    .cat-select, .note-input {
+      border: 2px solid #eee; border-radius: 12px; padding: 9px 12px;
+      font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
+      color: var(--dark); background: white; outline: none; transition: border-color .2s;
+    }
+    .cat-select { flex: 1; min-width: 130px; cursor: pointer; }
+    .note-input { flex: 2; min-width: 130px; }
+    .cat-select:focus, .note-input:focus { border-color: var(--accent); }
+    .note-input::placeholder { color: #ccc; font-weight: 600; }
+
+    .history-list { display: flex; flex-direction: column; gap: 7px; max-height: 280px; overflow-y: auto; }
+    .history-list::-webkit-scrollbar { width: 4px; }
+    .history-list::-webkit-scrollbar-thumb { background: #eee; border-radius: 10px; }
+
+    .h-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px; font-size: 0.88rem; font-weight: 700; animation: fadeUp .3s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .h-item.p1-item { background: #FFF0F0; }
+    .h-item.p2-item { background: #F8F0FF; }
+    .h-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .p1-item .h-dot { background: var(--p1); }
+    .p2-item .h-dot { background: var(--p2); }
+    .h-name { font-weight: 900; }
+    .p1-item .h-name { color: var(--p1); }
+    .p2-item .h-name { color: var(--p2); }
+    .h-mid { flex: 1; color: #555; }
+    .h-note { font-size: 0.78rem; color: #aaa; font-weight: 600; }
+    .h-date { color: #bbb; font-size: 0.78rem; font-weight: 700; margin-right: 4px; }
+    .h-delete { background: none; border: none; color: #ddd; font-size: 1rem; cursor: pointer; padding: 2px 4px; border-radius: 6px; transition: color .15s; line-height: 1; }
+    .h-delete:hover { color: #FF6B6B; }
+    .empty-msg { text-align: center; color: #ccc; font-weight: 700; padding: 18px 0; font-size: 0.9rem; }
+
+    .reset-btn {
+      background: none; border: 2.5px solid #e8e8e8; border-radius: 14px;
+      padding: 10px 24px; font-family: 'Nunito', sans-serif; font-size: 0.88rem;
+      font-weight: 800; color: #bbb; cursor: pointer; transition: border-color .15s, color .15s;
+    }
+    .reset-btn:hover { border-color: #FF6B6B; color: #FF6B6B; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Chi Ha Pagato? 💸</h1>
+    <p>Il vostro contatore di coppia</p>
+  </div>
+
+  <div class="names-row">
+    <div class="name-block">
+      <label>Tu</label>
+      <input type="text" id="name1" value="Io" maxlength="14">
+    </div>
+    <div class="name-block">
+      <label>Partner</label>
+      <input type="text" id="name2" value="Lei" maxlength="14">
+    </div>
+  </div>
+
+  <div class="cards-row">
+    <div class="counter-card card1">
+      <div class="card-avatar">🧑</div>
+      <div class="card-count" id="cnt1">0</div>
+      <div class="card-label">pagamenti</div>
+      <button class="card-add-btn" id="btn1" onclick="addPayment(1)">+ Ha pagato Io</button>
+    </div>
+    <div class="counter-card card2">
+      <div class="card-avatar">💖</div>
+      <div class="card-count" id="cnt2">0</div>
+      <div class="card-label">pagamenti</div>
+      <button class="card-add-btn" id="btn2" onclick="addPayment(2)">+ Ha pagato Lei</button>
+    </div>
+  </div>
+
+  <div class="balance-wrap">
+    <div class="section-label">⚖️ Equilibrio</div>
+    <div class="bar-track">
+      <div class="bar-p1" id="barP1" style="width:50%"></div>
+      <div class="bar-p2" id="barP2"></div>
+    </div>
+    <div class="balance-labels">
+      <span id="blab1">Io — 0</span>
+      <span id="blab2">Lei — 0</span>
+    </div>
+    <div class="balance-msg" id="balanceMsg">Iniziate a registrare i pagamenti! 🍽️</div>
+  </div>
+
+  <div class="log-section">
+    <div class="section-label" style="margin-bottom:12px">📋 Storico pagamenti</div>
+    <div class="add-form">
+      <select class="cat-select" id="catSelect">
+        <option>🍽️ Cena</option>
+        <option>🥗 Pranzo</option>
+        <option>☕ Colazione</option>
+        <option>🧁 Merenda</option>
+        <option>🍕 Pizza</option>
+        <option>🍷 Aperitivo</option>
+        <option>🎬 Cinema</option>
+        <option>🛒 Spesa</option>
+        <option>✈️ Viaggio</option>
+        <option>🎁 Altro</option>
+      </select>
+      <input class="note-input" id="noteInput" type="text" placeholder="Nota opzionale…" maxlength="30">
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="empty-msg">Nessun pagamento registrato ancora 🥺</div>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">🗑️ Azzera tutto</button>
+
+  <script>
+    function setCookie(name, value) {
+      try {
+        document.cookie = name + '=' + encodeURIComponent(value) + '; expires=Fri, 31 Dec 2099 23:59:59 GMT; path=/; SameSite=Lax';
+      } catch(e) {}
+    }
+    function getCookie(name) {
+      try {
+        const match = document.cookie.split('; ').find(r => r.startsWith(name + '='));
+        return match ? decodeURIComponent(match.split('=')[1]) : null;
+      } catch(e) { return null; }
+    }
+
+    let data = { c1: 0, c2: 0, log: [] };
+    try {
+      const raw = getCookie('chipaga_v2');
+      if (raw) data = JSON.parse(raw);
+    } catch(e) {}
+
+    function save() {
+      try { setCookie('chipaga_v2', JSON.stringify(data)); } catch(e) {}
+    }
+
+    function getName(n) {
+      const val = document.getElementById('name' + n).value.trim();
+      return val || (n === 1 ? 'Io' : 'Lei');
+    }
+
+    function addPayment(who) {
+      const cat  = document.getElementById('catSelect').value;
+      const note = document.getElementById('noteInput').value.trim();
+      if (who === 1) data.c1++; else data.c2++;
+      data.log.unshift({
+        who, cat, note,
+        date: new Date().toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })
+      });
+      if (data.log.length > 60) data.log.pop();
+      document.getElementById('noteInput').value = '';
+      save();
+      render();
+    }
+
+    function deleteEntry(idx) {
+      const entry = data.log[idx];
+      if (entry.who === 1) data.c1 = Math.max(0, data.c1 - 1);
+      else data.c2 = Math.max(0, data.c2 - 1);
+      data.log.splice(idx, 1);
+      save();
+      render();
+    }
+
+    function render() {
+      const n1 = getName(1), n2 = getName(2);
+
+      document.getElementById('cnt1').textContent = data.c1;
+      document.getElementById('cnt2').textContent = data.c2;
+
+      // Update button labels
+      document.getElementById('btn1').textContent = '+ Ha pagato ' + n1;
+      document.getElementById('btn2').textContent = '+ Ha pagato ' + n2;
+
+      // Balance
+      const total = data.c1 + data.c2;
+      const pct1  = total === 0 ? 50 : Math.round(data.c1 / total * 100);
+      document.getElementById('barP1').style.width = pct1 + '%';
+      document.getElementById('blab1').textContent = n1 + ' — ' + data.c1;
+      document.getElementById('blab2').textContent = n2 + ' — ' + data.c2;
+
+      let msg = '';
+      if (total === 0)          msg = 'Iniziate a registrare i pagamenti! 🍽️';
+      else if (data.c1 === data.c2) msg = '🎉 Perfettamente in pari! Bravi!';
+      else if (data.c1 > data.c2) {
+        const d = data.c1 - data.c2;
+        msg = `${n1} ha pagato ${d} volt${d===1?'a':'e'} in più 😅`;
+      } else {
+        const d = data.c2 - data.c1;
+        msg = `${n2} ha pagato ${d} volt${d===1?'a':'e'} in più 💖`;
+      }
+      document.getElementById('balanceMsg').textContent = msg;
+
+      // History
+      const list = document.getElementById('historyList');
+      if (data.log.length === 0) {
+        list.innerHTML = '<div class="empty-msg">Nessun pagamento registrato ancora 🥺</div>';
+        return;
+      }
+      list.innerHTML = data.log.map((e, i) => `
+        <div class="h-item p${e.who}-item" style="animation-delay:${i*0.03}s">
+          <div class="h-dot"></div>
+          <div class="h-mid">
+            <span class="h-name">${e.who === 1 ? n1 : n2}</span>
+            &nbsp;·&nbsp;${e.cat}
+            ${e.note ? `<div class="h-note">${e.note}</div>` : ''}
+          </div>
+          <span class="h-date">${e.date}</span>
+          <button class="h-delete" onclick="deleteEntry(${i})" title="Elimina">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function resetAll() {
+      if (!confirm('Sei sicuro/a di voler azzerare tutto?')) return;
+      data = { c1: 0, c2: 0, log: [] };
+      save();
+      render();
+    }
+
+    document.getElementById('name1').addEventListener('input', render);
+    document.getElementById('name2').addEventListener('input', render);
+
+    render();
+  </script>
+</body>
+</html>
